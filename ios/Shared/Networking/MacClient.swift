@@ -17,7 +17,7 @@ struct MacClient {
     }
 
     func summarize(url: URL, cleanText: String, language: Language) async throws -> SummaryResult {
-        var request = URLRequest(url: serverURL, timeoutInterval: 3)
+        var request = URLRequest(url: serverURL, timeoutInterval: 35)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue(sharedSecret, forHTTPHeaderField: "X-Secret")

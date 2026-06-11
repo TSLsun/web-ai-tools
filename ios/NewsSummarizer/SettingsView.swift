@@ -57,16 +57,20 @@ struct SettingsView: View {
         testing = true
         connectionStatus = nil
         Task {
-            let client = MacClient(serverURL: url, sharedSecret: settings.sharedSecret)
+            var request = URLRequest(url: url, timeoutInterval: 5)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue(settings.sharedSecret, forHTTPHeaderField: "X-Secret")
+            request.httpBody = try? JSONEncoder().encode(["url": "", "cleanText": "", "language": ""])
             do {
-                _ = try await client.summarize(
-                    url: URL(string: "https://example.com")!,
-                    cleanText: "ping",
-                    language: settings.language
-                )
-                connectionStatus = "✓ 連線成功"
+                let (_, response) = try await URLSession.shared.data(for: request)
+                if let http = response as? HTTPURLResponse {
+                    connectionStatus = http.statusCode == 401
+                        ? "✗ 伺服器可達，但密鑰錯誤"
+                        : "✓ 連線成功"
+                }
             } catch {
-                connectionStatus = "✗ 連線失敗: \(error.localizedDescription)"
+                connectionStatus = "✗ 無法連線: \(error.localizedDescription)"
             }
             testing = false
         }

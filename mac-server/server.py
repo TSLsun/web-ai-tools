@@ -32,7 +32,11 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         length = int(self.headers.get("Content-Length", 0))
-        body = json.loads(self.rfile.read(length))
+        try:
+            body = json.loads(self.rfile.read(length))
+        except (json.JSONDecodeError, ValueError):
+            self._respond(400, {"error": "invalid_json"})
+            return
 
         clean_text = body.get("cleanText", "")[:4000]
         language = body.get("language", "zh-TW")
@@ -61,6 +65,8 @@ class Handler(BaseHTTPRequestHandler):
             self._respond(504, {"error": "claude_timeout"})
         except json.JSONDecodeError:
             self._respond(500, {"error": "parse_failed", "raw": result.stdout[:200]})
+        except Exception as e:
+            self._respond(500, {"error": "claude_failed", "detail": str(e)})
 
     def _respond(self, status: int, body: dict):
         payload = json.dumps(body).encode()

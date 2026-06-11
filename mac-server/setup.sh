@@ -8,7 +8,8 @@ PLIST_DIR="$HOME/Library/LaunchAgents"
 PLIST_NAME="com.tslsun.newssummarizer.plist"
 
 # Check dependencies
-if ! command -v claude &>/dev/null; then
+CLAUDE_PATH=$(command -v claude 2>/dev/null || true)
+if [ -z "$CLAUDE_PATH" ]; then
     echo "Error: 'claude' CLI not found. Install Claude Code first."
     exit 1
 fi
@@ -40,6 +41,11 @@ cat > "$PLIST_DIR/$PLIST_NAME" << EOF
         <string>/usr/bin/python3</string>
         <string>$SCRIPT_DIR/server.py</string>
     </array>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>$(dirname "$CLAUDE_PATH"):/usr/local/bin:/usr/bin:/bin</string>
+    </dict>
     <key>RunAtLoad</key>
     <true/>
     <key>KeepAlive</key>
@@ -57,7 +63,7 @@ launchctl load "$PLIST_DIR/$PLIST_NAME"
 
 echo ""
 echo "✓ Server installed and started"
-echo "✓ Verify: curl -s http://localhost:8765/summarize || echo 'server running'"
+echo "✓ Verify: curl -s -o /dev/null -w '%{http_code}' -X POST http://localhost:8765/summarize  # expect 401 = running"
 echo ""
 echo "Next steps:"
 echo "  1. Open iOS app > Settings"
