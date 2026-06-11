@@ -2,21 +2,24 @@ import UIKit
 import SwiftUI
 
 class ShareViewController: UIViewController {
+    private var host: UIHostingController<ShareRootView>?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
 
         let rootView = ShareRootView(extensionContext: extensionContext)
-        let host = UIHostingController(rootView: rootView)
-        addChild(host)
-        view.addSubview(host.view)
-        host.view.translatesAutoresizingMaskIntoConstraints = false
+        let hostVC = UIHostingController(rootView: rootView)
+        host = hostVC
+        addChild(hostVC)
+        view.addSubview(hostVC.view)
+        hostVC.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            host.view.topAnchor.constraint(equalTo: view.topAnchor),
-            host.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            host.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            host.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            hostVC.view.topAnchor.constraint(equalTo: view.topAnchor),
+            hostVC.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            hostVC.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            hostVC.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
-        host.didMove(toParent: self)
+        hostVC.didMove(toParent: self)
     }
 }
