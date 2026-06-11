@@ -1,0 +1,74 @@
+# ios/project.yml
+name: NewsSummarizer
+options:
+  bundleIdPrefix: com.tslsun
+  deploymentTarget:
+    iOS: "16.0"
+
+packages:
+  SwiftSoup:
+    url: https://github.com/scinfu/SwiftSoup
+    from: 2.7.2
+
+targets:
+  NewsSummarizer:
+    type: application
+    platform: iOS
+    sources:
+      - path: NewsSummarizer
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.tslsun.newssummarizer
+        SWIFT_VERSION: "5.9"
+    entitlements:
+      path: NewsSummarizer/NewsSummarizer.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.tslsun.newssummarizer
+    dependencies:
+      - package: SwiftSoup
+    info:
+      path: NewsSummarizer/Info.plist
+      properties:
+        UILaunchScreen: {}
+
+  ShareExtension:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: ShareExtension
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.tslsun.newssummarizer.shareextension
+        SWIFT_VERSION: "5.9"
+    entitlements:
+      path: ShareExtension/ShareExtension.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.tslsun.newssummarizer
+    dependencies:
+      - package: SwiftSoup
+      - target: NewsSummarizer
+        embed: false
+    info:
+      path: ShareExtension/Info.plist
+      properties:
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.share-services
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ShareViewController
+          NSExtensionActivationRule:
+            NSExtensionActivationSupportsWebURLWithMaxCount: 1
+
+  NewsSummarizerTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: NewsSummarizerTests
+    settings:
+      base:
+        SWIFT_VERSION: "5.9"
+    dependencies:
+      - target: NewsSummarizer  # Shared/ types accessible via @testable import NewsSummarizer
+      - package: SwiftSoup
