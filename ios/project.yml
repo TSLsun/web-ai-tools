@@ -71,4 +71,3 @@ targets:
         SWIFT_VERSION: "5.9"
     dependencies:
       - target: NewsSummarizer  # Shared/ types accessible via @testable import NewsSummarizer
-      - package: SwiftSoup
