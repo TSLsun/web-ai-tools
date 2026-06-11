@@ -8,12 +8,13 @@ final class MockHTTPSession: HTTPSession {
 
     func data(for request: URLRequest) async throws -> (Data, URLResponse) {
         if let error = stubbedError { throw error }
+        let url = request.url ?? URL(string: "https://example.com")!
         let response = HTTPURLResponse(
-            url: request.url!,
+            url: url,
             statusCode: stubbedStatus,
             httpVersion: nil,
             headerFields: nil
-        )!
+        ) ?? URLResponse()
         return (stubbedData, response)
     }
 }
