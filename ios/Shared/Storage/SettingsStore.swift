@@ -32,12 +32,18 @@ final class SettingsStore: ObservableObject {
 
     var sharedSecret: String {
         get { keychain.get("sharedSecret") }
-        set { keychain.set(newValue, for: "sharedSecret") }
+        set {
+            keychain.set(newValue, for: "sharedSecret")
+            objectWillChange.send()
+        }
     }
 
     var geminiAPIKey: String {
         get { keychain.get("geminiAPIKey") }
-        set { keychain.set(newValue, for: "geminiAPIKey") }
+        set {
+            keychain.set(newValue, for: "geminiAPIKey")
+            objectWillChange.send()
+        }
     }
 
     var isConfigured: Bool {

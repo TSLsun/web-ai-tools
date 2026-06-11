@@ -12,16 +12,19 @@ struct KeychainHelper {
     }
 
     func set(_ value: String, for key: String) {
-        let data = value.data(using: .utf8)!
-        var query: [CFString: Any] = [
+        guard let data = value.data(using: .utf8) else { return }
+        let query: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
             kSecAttrService: service,
             kSecAttrAccount: key,
             kSecAttrAccessGroup: accessGroup,
         ]
-        SecItemDelete(query as CFDictionary)
-        query[kSecValueData] = data
-        SecItemAdd(query as CFDictionary, nil)
+        let attributes: [CFString: Any] = [kSecValueData: data]
+        if SecItemUpdate(query as CFDictionary, attributes as CFDictionary) == errSecItemNotFound {
+            var addQuery = query
+            addQuery[kSecValueData] = data
+            SecItemAdd(addQuery as CFDictionary, nil)
+        }
     }
 
     func get(_ key: String) -> String {
