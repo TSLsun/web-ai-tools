@@ -35,12 +35,16 @@ struct MacClient {
             throw MacClientError.unauthorized
         }
 
-        let decoded = try JSONDecoder().decode(MacResponse.self, from: data)
-        return SummaryResult(
-            title: decoded.title,
-            bullets: decoded.bullets,
-            url: URL(string: decoded.url) ?? url
-        )
+        do {
+            let decoded = try JSONDecoder().decode(MacResponse.self, from: data)
+            return SummaryResult(
+                title: decoded.title,
+                bullets: decoded.bullets,
+                url: URL(string: decoded.url) ?? url
+            )
+        } catch is DecodingError {
+            throw MacClientError.invalidResponse
+        }
     }
 
     private struct MacResponse: Decodable {

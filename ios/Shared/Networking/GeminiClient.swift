@@ -43,7 +43,9 @@ struct GeminiClient {
             throw GeminiClientError.emptyResponse
         }
 
-        let textData = text.data(using: .utf8) ?? Data()
+        guard let textData = text.data(using: .utf8) else {
+            throw GeminiClientError.parseError
+        }
         let parsed = try JSONDecoder().decode(SummaryJSON.self, from: textData)
 
         return SummaryResult(title: parsed.title, bullets: parsed.bullets, url: url)
