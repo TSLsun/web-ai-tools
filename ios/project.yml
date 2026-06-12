@@ -64,8 +64,7 @@ targets:
         NSExtension:
           NSExtensionPointIdentifier: com.apple.share-services
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ShareViewController
-          NSExtensionActivationRule:
-            NSExtensionActivationSupportsWebURLWithMaxCount: 1
+          NSExtensionActivationRule: TRUEPREDICATE
 
   NewsSummarizerTests:
     type: bundle.unit-test

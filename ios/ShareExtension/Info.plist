@@ -28,10 +28,7 @@
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionActivationRule</key>
-		<dict>
-			<key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
-			<integer>1</integer>
-		</dict>
+		<string>TRUEPREDICATE</string>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.share-services</string>
 		<key>NSExtensionPrincipalClass</key>
