@@ -3,22 +3,22 @@ import Security
 
 struct KeychainHelper {
     private let service: String
-    private let accessGroup: String
+    private let accessGroup: String?
 
     init(service: String = "com.tslsun.newssummarizer",
-         accessGroup: String = "group.com.tslsun.newssummarizer") {
+         accessGroup: String? = "group.com.tslsun.newssummarizer") {
         self.service = service
         self.accessGroup = accessGroup
     }
 
     func set(_ value: String, for key: String) {
         guard let data = value.data(using: .utf8) else { return }
-        let query: [CFString: Any] = [
+        var query: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
             kSecAttrService: service,
             kSecAttrAccount: key,
-            kSecAttrAccessGroup: accessGroup,
         ]
+        if let group = accessGroup { query[kSecAttrAccessGroup] = group }
         let attributes: [CFString: Any] = [kSecValueData: data]
         if SecItemUpdate(query as CFDictionary, attributes as CFDictionary) == errSecItemNotFound {
             var addQuery = query
@@ -28,14 +28,14 @@ struct KeychainHelper {
     }
 
     func get(_ key: String) -> String {
-        let query: [CFString: Any] = [
+        var query: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
             kSecAttrService: service,
             kSecAttrAccount: key,
-            kSecAttrAccessGroup: accessGroup,
             kSecReturnData: true,
             kSecMatchLimit: kSecMatchLimitOne,
         ]
+        if let group = accessGroup { query[kSecAttrAccessGroup] = group }
         var result: AnyObject?
         guard SecItemCopyMatching(query as CFDictionary, &result) == errSecSuccess,
               let data = result as? Data,
@@ -44,12 +44,12 @@ struct KeychainHelper {
     }
 
     func delete(_ key: String) {
-        let query: [CFString: Any] = [
+        var query: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
             kSecAttrService: service,
             kSecAttrAccount: key,
-            kSecAttrAccessGroup: accessGroup,
         ]
+        if let group = accessGroup { query[kSecAttrAccessGroup] = group }
         SecItemDelete(query as CFDictionary)
     }
 }

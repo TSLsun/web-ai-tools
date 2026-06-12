@@ -3,11 +3,22 @@ import XCTest
 
 final class SettingsStoreTests: XCTestCase {
     var store: SettingsStore!
+    var keychainService: String!
 
     override func setUp() {
         super.setUp()
-        // Use in-memory UserDefaults for tests (no suite name = ephemeral)
-        store = SettingsStore(defaults: UserDefaults(suiteName: "test-\(UUID().uuidString)")!)
+        keychainService = "test-\(UUID().uuidString)"
+        store = SettingsStore(
+            defaults: UserDefaults(suiteName: "test-\(UUID().uuidString)")!,
+            keychain: KeychainHelper(service: keychainService, accessGroup: nil)
+        )
+    }
+
+    override func tearDown() {
+        super.tearDown()
+        let kc = KeychainHelper(service: keychainService, accessGroup: nil)
+        kc.delete("sharedSecret")
+        kc.delete("geminiAPIKey")
     }
 
     func testLanguageDefaultIsZhTW() {
