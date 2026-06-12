@@ -57,7 +57,7 @@ struct SettingsView: View {
         testing = true
         connectionStatus = nil
         Task {
-            var request = URLRequest(url: url, timeoutInterval: 5)
+            var request = URLRequest(url: url, timeoutInterval: 15)
             request.httpMethod = "POST"
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.setValue(settings.sharedSecret, forHTTPHeaderField: "X-Secret")

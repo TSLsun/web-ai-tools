@@ -28,10 +28,13 @@ targets:
           - group.com.tslsun.newssummarizer
     dependencies:
       - package: SwiftSoup
+      - target: ShareExtension
+        embed: true
     info:
       path: NewsSummarizer/Info.plist
       properties:
         UILaunchScreen: {}
+        NSLocalNetworkUsageDescription: "Connects to Mac server over Tailscale to summarize articles"
         NSAppTransportSecurity:
           NSAllowsArbitraryLoads: true
 
@@ -52,11 +55,10 @@ targets:
           - group.com.tslsun.newssummarizer
     dependencies:
       - package: SwiftSoup
-      - target: NewsSummarizer
-        embed: false
     info:
       path: ShareExtension/Info.plist
       properties:
+        CFBundleDisplayName: NewsSummarizer
         NSAppTransportSecurity:
           NSAllowsArbitraryLoads: true
         NSExtension:

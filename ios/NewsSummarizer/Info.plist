@@ -20,6 +20,8 @@
 	<string>1</string>
 	<key>UILaunchScreen</key>
 	<dict/>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Connects to Mac server over Tailscale to summarize articles</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
