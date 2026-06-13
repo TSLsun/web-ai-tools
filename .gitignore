@@ -3,8 +3,14 @@ __pycache__/
 *.pyc
 
 # Xcode
-*.xcodeproj/xcuserdata/
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+!*.xcworkspace/contents.xcworkspacedata
 *.xcworkspace/xcuserdata/
 xcuserdata/
 DerivedData/
 ios/build/
+/*.gcno
+**/xcshareddata/WorkspaceSettings.xcsettings
