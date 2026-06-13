@@ -55,6 +55,7 @@ struct SettingsView: View {
                     Text("4. 在 LINE 或瀏覽器分享連結時選擇此 App")
                 }
             }
+            .scrollDismissesKeyboard(.immediately)
             .navigationTitle("設定")
             .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {
