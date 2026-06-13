@@ -1,5 +1,11 @@
 import SwiftUI
 
+extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+
 struct ContentView: View {
     @StateObject private var settings = SettingsStore()
     @State private var urlText = ""
@@ -78,6 +84,13 @@ struct ContentView: View {
             }
             .padding()
             .navigationTitle("摘要新聞")
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("完成") { hideKeyboard() }
+                }
+            }
+            .onTapGesture { hideKeyboard() }
             .task { detectClipboardURL() }
         }
     }
