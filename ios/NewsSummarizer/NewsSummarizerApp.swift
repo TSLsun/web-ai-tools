@@ -5,7 +5,12 @@ import SwiftUI
 struct NewsSummarizerApp: App {
     var body: some Scene {
         WindowGroup {
-            SettingsView()
+            TabView {
+                ContentView()
+                    .tabItem { Label("摘要", systemImage: "newspaper") }
+                SettingsView()
+                    .tabItem { Label("設定", systemImage: "gearshape") }
+            }
         }
     }
 }
