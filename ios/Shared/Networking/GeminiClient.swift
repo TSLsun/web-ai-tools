@@ -17,7 +17,7 @@ enum GeminiClientError: LocalizedError {
 struct GeminiClient {
     private let apiKey: String
     private let session: HTTPSession
-    private let endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+    private let endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent"
 
     init(apiKey: String, session: HTTPSession = URLSession.shared) {
         self.apiKey = apiKey
