@@ -1,0 +1,15 @@
+#compdef ctl.sh
+
+_ctl() {
+  local commands=(
+    'start:Start the NewsSummarizer server'
+    'stop:Stop the NewsSummarizer server'
+    'restart:Restart the NewsSummarizer server'
+    'status:Show whether server is running'
+    'log:Tail live stdout log'
+    'err:Tail live error log'
+  )
+  _describe 'command' commands
+}
+
+_ctl "$@"
