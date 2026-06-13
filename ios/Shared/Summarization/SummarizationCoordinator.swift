@@ -41,22 +41,29 @@ final class SummarizationCoordinator {
         let title = parsed.title
 
         if let mac = macClient {
-            if let result = try? await mac(url, cleanText, language) {
+            do {
+                let result = try await mac(url, cleanText, language)
                 return SummaryResult(
                     title: result.title.isEmpty ? title : result.title,
                     bullets: result.bullets,
                     url: url
                 )
+            } catch {
+                print("[Coordinator] Mac backend failed: \(error)")
             }
         }
 
         if let gemini = geminiClient {
-            if let result = try? await gemini(url, cleanText, language) {
+            do {
+                let result = try await gemini(url, cleanText, language)
                 return SummaryResult(
                     title: result.title.isEmpty ? title : result.title,
                     bullets: result.bullets,
                     url: url
                 )
+            } catch {
+                print("[Coordinator] Gemini backend failed: \(error)")
+                throw error
             }
         }
 

@@ -1,9 +1,17 @@
 import Foundation
 
-enum GeminiClientError: Error {
+enum GeminiClientError: LocalizedError {
     case badStatus(Int)
     case emptyResponse
     case parseError
+
+    var errorDescription: String? {
+        switch self {
+        case .badStatus(let code): return "Gemini HTTP \(code) — check API key or quota"
+        case .emptyResponse: return "Gemini returned empty response"
+        case .parseError: return "Gemini response parse failed"
+        }
+    }
 }
 
 struct GeminiClient {
@@ -35,6 +43,8 @@ struct GeminiClient {
         let (data, response) = try await session.data(for: request)
 
         if let http = response as? HTTPURLResponse, !(200..<300).contains(http.statusCode) {
+            let body = String(data: data, encoding: .utf8) ?? "<non-utf8>"
+            print("[GeminiClient] HTTP \(http.statusCode): \(body.prefix(500))")
             throw GeminiClientError.badStatus(http.statusCode)
         }
 
