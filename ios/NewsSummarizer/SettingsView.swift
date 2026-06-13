@@ -4,6 +4,8 @@ struct SettingsView: View {
     @StateObject private var settings = SettingsStore()
     @State private var connectionStatus: String? = nil
     @State private var testing = false
+    @State private var showSecret = false
+    @State private var showGeminiKey = false
 
     var body: some View {
         NavigationView {
@@ -18,10 +20,19 @@ struct SettingsView: View {
                 }
 
                 Section("Mac 伺服器 (Tailscale)") {
-                    TextField("Tailscale IP (e.g. 100.x.x.x)", text: $settings.macTailscaleIP)
-                        .keyboardType(.numbersAndPunctuation)
-                        .autocorrectionDisabled()
-                    SecureField("共用密鑰 (Shared Secret)", text: secureBinding(\.sharedSecret))
+                    HStack {
+                        TextField("Tailscale IP (e.g. 100.x.x.x)", text: $settings.macTailscaleIP)
+                            .keyboardType(.numbersAndPunctuation)
+                            .autocorrectionDisabled()
+                            .textInputAutocapitalization(.never)
+                        if !settings.macTailscaleIP.isEmpty {
+                            Button { settings.macTailscaleIP = "" } label: {
+                                Image(systemName: "xmark.circle.fill").foregroundColor(.secondary)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    RevealableField("共用密鑰 (Shared Secret)", text: binding(\.sharedSecret), revealed: $showSecret)
                     Button(testing ? "測試中..." : "測試連線") { testConnection() }
                         .disabled(settings.macTailscaleIP.isEmpty || testing)
                     if let status = connectionStatus {
@@ -32,7 +43,7 @@ struct SettingsView: View {
                 }
 
                 Section("備援 AI (Gemini Flash)") {
-                    SecureField("Gemini API Key", text: secureBinding(\.geminiAPIKey))
+                    RevealableField("Gemini API Key", text: binding(\.geminiAPIKey), revealed: $showGeminiKey)
                     Link("取得免費 API Key", destination: URL(string: "https://aistudio.google.com/app/apikey")!)
                         .font(.footnote)
                 }
@@ -44,11 +55,17 @@ struct SettingsView: View {
                     Text("4. 在 LINE 或瀏覽器分享連結時選擇此 App")
                 }
             }
-            .navigationTitle("NewsSummarizer")
+            .navigationTitle("設定")
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("完成") { hideKeyboard() }
+                }
+            }
         }
     }
 
-    private func secureBinding(_ kp: ReferenceWritableKeyPath<SettingsStore, String>) -> Binding<String> {
+    private func binding(_ kp: ReferenceWritableKeyPath<SettingsStore, String>) -> Binding<String> {
         Binding(get: { settings[keyPath: kp] }, set: { settings[keyPath: kp] = $0 })
     }
 
@@ -73,6 +90,37 @@ struct SettingsView: View {
                 connectionStatus = "✗ 無法連線: \(error.localizedDescription)"
             }
             testing = false
+        }
+    }
+}
+
+private struct RevealableField: View {
+    let label: String
+    @Binding var text: String
+    @Binding var revealed: Bool
+
+    init(_ label: String, text: Binding<String>, revealed: Binding<Bool>) {
+        self.label = label
+        self._text = text
+        self._revealed = revealed
+    }
+
+    var body: some View {
+        HStack {
+            if revealed {
+                TextField(label, text: $text)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
+            } else {
+                SecureField(label, text: $text)
+            }
+            Button {
+                revealed.toggle()
+            } label: {
+                Image(systemName: revealed ? "eye.slash" : "eye")
+                    .foregroundColor(.secondary)
+            }
+            .buttonStyle(.plain)
         }
     }
 }
