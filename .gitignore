@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+
+# Xcode
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+!*.xcworkspace/contents.xcworkspacedata
+*.xcworkspace/xcuserdata/
+xcuserdata/
+DerivedData/
+ios/build/
+/*.gcno
+**/xcshareddata/WorkspaceSettings.xcsettings
