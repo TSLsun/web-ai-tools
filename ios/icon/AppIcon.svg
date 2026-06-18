@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 100 100">
+  <!-- Summary · iOS App Icon · C-1 Masthead.  Opaque master, no rounded corners (Xcode masks). -->
+  <rect width="100" height="100" fill="#f4f5fa"/>
+  <rect x="24" y="14" width="52" height="4.5" rx="2.25" fill="#1044cc"/>
+  <rect x="24" y="22.5" width="34" height="2.5" rx="1.25" fill="#1044cc" opacity="0.3"/>
+  <text x="50" y="82" text-anchor="middle"
+        font-family="system-ui,-apple-system,'SF Pro Display',sans-serif"
+        font-weight="800" font-size="70" fill="#09111f"
+        style="letter-spacing:-0.03em">S</text>
+</svg>
